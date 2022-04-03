@@ -1,0 +1,224 @@
+const express = require('express');
+const router = express.Router();
+const Invoice = require('../incoming/incoming.model');
+var MongoClient = require('mongodb').MongoClient;
+const bodyParser = require('body-parser');
+const incomingModel = require('../incoming/incoming.model');
+const invoice = express();
+const incomingService = require('../incoming/incoming.service');
+const { mquery } = require('mongoose');
+invoice.use(bodyParser.json());
+var ObjectId = require('mongodb').ObjectID;
+
+
+
+
+var url = "mongodb://root:example@localhost:27018";
+
+router.delete('/:_id', async (req, res) => {
+  try {
+    console.log('Löschung wird aufgerufen, mit id' + req.params._id)
+    MongoClient.connect(url, function (err, db) {
+      if (err) throw err;
+      var dbo = db.db("invoice");
+      dbo.collection("customers").deleteOne({ _id: ObjectId(req.params._id) }, function (err, result) {
+        if (err) throw err;
+        console.log(result);
+        res.json(result);
+        db.close();
+      });
+    });
+  }
+  catch (err) {
+    console.log('Löschung wird aufgerufen')
+    res.json({ message: err })
+  }
+});
+
+
+
+
+
+//ROUTES
+router.get('/', async (req, res) => {
+
+  console.log("Ich war hier");
+  try {
+    MongoClient.connect(url, function (err, db) {
+      if (err) throw err;
+      var dbo = db.db("invoice");
+      console.log("Header: " + req.headers.username);
+      dbo.collection("customers").find({ username: req.headers.username }).toArray(function (err, result) {
+        if (err) throw err;
+        console.log(result);
+
+        res.json(result);
+        db.close();
+      });
+    });
+  }
+  catch (err) {
+    console.log("error: " + err);
+    res.json({ message: err })
+  }
+});
+
+router.get('/categories', async (req, res) => {
+  try {
+    MongoClient.connect(url, function (err, db) {
+      if (err) throw err;
+      var dbo = db.db("invoice");
+      dbo.collection("customers").aggregate([{ $match: { username: req.headers.username } }, { $group: { _id: "$categorie", amount: { $push: "$$ROOT" } } }, {
+        $addFields:
+        {
+          amount: { $sum: "$amount.amount" }
+        }
+      }]).toArray(function (err, result) {
+        if (err) throw err;
+        console.log(result);
+        res.json(result);
+        db.close();
+      });
+    });
+  }
+  catch (err) {
+    console.log("error: " + err);
+    res.json({ message: err })
+  }
+});
+
+router.get('/invoicebydate', async (req, res) => {
+  try {
+    MongoClient.connect(url, function (err, db) {
+      if (err) throw err;
+      var dbo = db.db("invoice");
+      //var start = new Date("2022-03-30");
+      //var end = new Date("2021-03-01");
+      dbo.collection("customers").aggregate([{ $match: { username: req.headers.username } } ,
+        { $group: { _id: {
+        year : { $year : "$date" },        
+        month : { $month : "$date"},
+    }, amount: { $push: "$$ROOT" } } }, {
+        $addFields:
+        {
+          amount: { $sum: "$amount.amount" }
+        }
+      }]).toArray(function (err, result) {
+        if (err) throw err;
+        console.log(result);
+        res.json(result);
+        db.close();
+      });
+    });
+  }
+  catch (err) {
+    console.log("error: " + err);
+    res.json({ message: err })
+  }
+});
+
+
+
+router.get('/test', async (req, res) => {
+  try {
+    MongoClient.connect(url, function (err, db) {
+      if (err) throw err;
+      var dbo = db.db("invoice");
+      var start = new Date("2022-03-30");
+    var end = new Date("2020-02-01");
+      dbo.collection("customers").aggregate([{
+        $match: { // filter to limit to whatever is of importance
+            "date": {
+                $gte: end,
+                $lte: start
+            }
+        }
+    }, {
+        $group: { // group by
+            _id: {
+                "month": { $month: "$date" }, // month
+                "year": { $year: "$date" } }, // and year
+            "count": { $sum: 1 }  // and sum up all documents per group
+        }
+    }]).toArray(function (err, result) {
+        if (err) throw err;
+        console.log(result);
+        res.json(result);
+        db.close();
+      });
+    });
+  }
+  catch (err) {
+    console.log("error: " + err);
+    res.json({ message: err })
+  }
+});
+
+router.get('/:title', async (req, res) => {
+  try {
+    MongoClient.connect(url, function (err, db) {
+      if (err) throw err;
+      var dbo = db.db("invoice");
+      dbo.collection("customers").findOne({ "title": req.params.title }, function (err, result) {
+        if (err) throw err;
+        console.log(result);
+        res.json(result);
+        db.close();
+      });
+    });
+  }
+  catch (err) {
+    res.json({ message: err })
+  }
+});
+
+router.post('/', async (req, res) => {
+  const invoice = new Invoice({
+    title: req.body.title,
+    categorie: req.body.categorie,
+    amount: req.body.amount,
+    username: req.body.username,
+    date: req.body.date
+  });
+  MongoClient.connect(url, function (err, db) {
+    if (err) throw err;
+    var dbo = db.db("invoice");
+    dbo.collection("customers").insertOne(invoice, function (err, res) {
+      if (err) throw err;
+      console.log("1 document inserted");
+      db.close();
+    });
+    res.json(invoice);
+  });
+});
+
+router.patch('/:_id', async (req, res) => {
+  console.log('Jetzt wird geändert')
+
+  try {
+    console.log('Update wird aufgerufen mit id' + req.params._id)
+    console.log('neuer titel' + req.body.title);
+    MongoClient.connect(url, function (err, db) {
+      if (err) throw err;
+      var dbo = db.db("invoice");
+
+      var myquery = { _id: ObjectId(req.params._id) };
+      var newvalues = { $set: { title: req.body.title, amount: req.body.amount, categorie: req.body.categorie, date: req.body.date } };
+      dbo.collection("customers").updateOne(myquery, newvalues, function (err, result) {
+        if (err) throw err;
+        console.log("1 document updated");
+        res.json(result);
+        db.close();
+      });
+    });
+  }
+  catch (err) {
+    console.log('Löschung wird aufgerufen')
+    res.json({ message: err })
+  }
+});
+
+
+
+
+module.exports = router;
