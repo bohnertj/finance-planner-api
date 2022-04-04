@@ -1,4 +1,4 @@
 ﻿{
-    "connectionString": "mongodb://root:example@localhost:27018",
+    "connectionString": "mongodb+srv://root:example@cluster0.oltk1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     "secret": "123456"
 }

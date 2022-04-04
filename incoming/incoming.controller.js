@@ -8,17 +8,14 @@ const invoice = express();
 const incomingService = require('../incoming/incoming.service');
 const { mquery } = require('mongoose');
 invoice.use(bodyParser.json());
-var ObjectId = require('mongodb').ObjectID;
 
 
-
-
-var url = "mongodb://root:example@localhost:27018";
+var url = "mongodb+srv://root:example@cluster0.oltk1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 router.delete('/:_id', async (req, res) => {
   try {
     console.log('Löschung wird aufgerufen, mit id' + req.params._id)
-    MongoClient.connect(url, function (err, db) {
+    MongoClient.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 } ,function (err, db) {
       if (err) throw err;
       var dbo = db.db("invoice");
       dbo.collection("customers").deleteOne({ _id: ObjectId(req.params._id) }, function (err, result) {
@@ -92,13 +89,19 @@ router.get('/invoicebydate', async (req, res) => {
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
       var dbo = db.db("invoice");
-      //var start = new Date("2022-03-30");
-      //var end = new Date("2021-03-01");
-      dbo.collection("customers").aggregate([{ $match: { username: req.headers.username } } ,
-        { $group: { _id: {
-        year : { $year : "$date" },        
-        month : { $month : "$date"},
-    }, amount: { $push: "$$ROOT" } } }, {
+      var start = new Date("2022-03-30");
+      var end = new Date("2021-03-01");
+      dbo.collection("customers").aggregate([{
+        $match: { username: req.headers.username }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$date" },
+            month: { $month: "$date" },
+          }, amount: { $push: "$$ROOT" }
+        }
+      }, {
         $addFields:
         {
           amount: { $sum: "$amount.amount" }
@@ -125,22 +128,24 @@ router.get('/test', async (req, res) => {
       if (err) throw err;
       var dbo = db.db("invoice");
       var start = new Date("2022-03-30");
-    var end = new Date("2020-02-01");
+      var end = new Date("2020-02-01");
       dbo.collection("customers").aggregate([{
         $match: { // filter to limit to whatever is of importance
-            "date": {
-                $gte: end,
-                $lte: start
-            }
+          "date": {
+            $gte: end,
+            $lte: start
+          }
         }
-    }, {
+      }, {
         $group: { // group by
-            _id: {
-                "month": { $month: "$date" }, // month
-                "year": { $year: "$date" } }, // and year
-            "count": { $sum: 1 }  // and sum up all documents per group
+          _id: {
+            "month": { $month: "$date" }, // month
+            "year": { $year: "$date" }
+          }, // and year
+           amount: { $push: "$$ROOT" }
+         // "count": { $sum: 1 }  // and sum up all documents per group
         }
-    }]).toArray(function (err, result) {
+      }]).toArray(function (err, result) {
         if (err) throw err;
         console.log(result);
         res.json(result);
