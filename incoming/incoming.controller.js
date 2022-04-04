@@ -8,6 +8,7 @@ const invoice = express();
 const incomingService = require('../incoming/incoming.service');
 const { mquery } = require('mongoose');
 invoice.use(bodyParser.json());
+var ObjectId = require('mongodb').ObjectID;
 
 
 var url = "mongodb+srv://root:example@cluster0.oltk1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
@@ -17,7 +18,7 @@ router.delete('/:_id', async (req, res) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   try {
     console.log('Löschung wird aufgerufen, mit id' + req.params._id)
-    MongoClient.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 } ,function (err, db) {
+    MongoClient.connect(url,function (err, db) {
       if (err) throw err;
       var dbo = db.db("invoice");
       dbo.collection("customers").deleteOne({ _id: ObjectId(req.params._id) }, function (err, result) {
