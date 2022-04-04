@@ -13,6 +13,8 @@ invoice.use(bodyParser.json());
 var url = "mongodb+srv://root:example@cluster0.oltk1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 router.delete('/:_id', async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   try {
     console.log('Löschung wird aufgerufen, mit id' + req.params._id)
     MongoClient.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 } ,function (err, db) {
@@ -38,7 +40,8 @@ router.delete('/:_id', async (req, res) => {
 
 //ROUTES
 router.get('/', async (req, res) => {
-
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   console.log("Ich war hier");
   try {
     MongoClient.connect(url, function (err, db) {
@@ -61,6 +64,8 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/categories', async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   try {
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
@@ -178,6 +183,8 @@ router.get('/:title', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   const invoice = new Invoice({
     title: req.body.title,
     categorie: req.body.categorie,
@@ -198,7 +205,8 @@ router.post('/', async (req, res) => {
 });
 
 router.patch('/:_id', async (req, res) => {
-  console.log('Jetzt wird geändert')
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
   try {
     console.log('Update wird aufgerufen mit id' + req.params._id)
