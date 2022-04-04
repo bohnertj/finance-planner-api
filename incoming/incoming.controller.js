@@ -187,6 +187,7 @@ router.post('/', async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   const invoice = new Invoice({
+    date:Date,
     title: req.body.title,
     categorie: req.body.categorie,
     amount: req.body.amount,
