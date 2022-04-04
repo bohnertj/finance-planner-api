@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const salary = require('../incoming/incoming.model');
+const salary = require('../outcomming/outcoming.model');
 var MongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser');
-const incomingModel = require('../incoming/incoming.model');
+const outcomingModel = require('../outcoming/outcoming.model');
 const salary = express();
-const incomingService = require('../incoming/incoming.service');
+const outcomingService = require('../outcoming/outcoming.service');
 const { mquery } = require('mongoose');
 salary.use(bodyParser.json());
 var ObjectId = require('mongodb').ObjectID;
