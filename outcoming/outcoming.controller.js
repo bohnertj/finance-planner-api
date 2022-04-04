@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const salary = require('../outcomming/outcoming.model');
+const Salary = require('../outcoming/outcoming.model');
 var MongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser');
 const outcomingModel = require('../outcoming/outcoming.model');

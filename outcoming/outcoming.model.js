@@ -2,7 +2,7 @@ const { ObjectId } = require('mongoose');
 const mongoose = require('mongoose');
 
 
-const OutcommingSchema = mongoose.Schema({
+const OutcomingSchema = mongoose.Schema({
     _id: {
         type: ObjectId,
         required: false
@@ -30,4 +30,4 @@ const OutcommingSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Outcoming', OutcommingSchema);
+module.exports = mongoose.model('Outcoming', OutcomingSchema);

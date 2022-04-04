@@ -5,7 +5,7 @@ var MongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser');
 const incomingModel = require('../incoming/incoming.model');
 const invoice = express();
-const incomingService = require('../incoming/incoming.service');
+const incomingService = require('./incoming.service');
 const { mquery } = require('mongoose');
 invoice.use(bodyParser.json());
 var ObjectId = require('mongodb').ObjectID;

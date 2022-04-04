@@ -15,6 +15,10 @@ function jwt() {
             '/api/v1/invoice/categories',
             '/api/v1/invoice/invoicebydate',
             '/api/v1/invoice/test',
+            '/api/v1/salary',
+            '/api/v1/salary/categories',
+            '/api/v1/salary/salarybydate',
+            '/api/v1/salary/test',
             '/favicon.ico',
         ]
     });
