@@ -8,7 +8,7 @@ const errorHandler = require('_helpers/error-handler');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+//app.use(cors());
 const cors=require("cors");
 const corsOptions ={
    origin:'*', 
