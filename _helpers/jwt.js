@@ -15,7 +15,7 @@ function jwt() {
             '/api/v1/invoice/categories',
             '/api/v1/invoice/invoicebydate',
             '/api/v1/invoice/test',
-            '/',
+            '/favicon.ico',
         ]
     });
 }
