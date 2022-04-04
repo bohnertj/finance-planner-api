@@ -205,7 +205,7 @@ router.post('/', async (req, res) => {
   });
 });
 
-router.patch('/:_id', async (req, res) => {
+router.put('/:_id', async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
