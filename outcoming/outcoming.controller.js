@@ -5,7 +5,7 @@ var MongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser');
 const outcomingModel = require('../outcoming/outcoming.model');
 const salary = express();
-const outcomingService = require('../outcoming/outcoming.service');
+const outcomingService = require('./outcoming.service');
 const { mquery } = require('mongoose');
 salary.use(bodyParser.json());
 var ObjectId = require('mongodb').ObjectID;
