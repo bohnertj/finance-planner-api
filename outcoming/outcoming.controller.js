@@ -20,8 +20,8 @@ router.delete('/:_id', async (req, res) => {
     console.log('Löschung wird aufgerufen, mit id' + req.params._id)
     MongoClient.connect(url,function (err, db) {
       if (err) throw err;
-      var dbo = db.db("salary");
-      dbo.collection("customers").deleteOne({ _id: ObjectId(req.params._id) }, function (err, result) {
+      var dbo = db.db("invoice");
+      dbo.collection("salary").deleteOne({ _id: ObjectId(req.params._id) }, function (err, result) {
         if (err) throw err;
         console.log(result);
         res.json(result);
@@ -47,9 +47,9 @@ router.get('/', async (req, res) => {
   try {
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
-      var dbo = db.db("salary");
+      var dbo = db.db("invoice");
       console.log("Header: " + req.headers.username);
-      dbo.collection("customers").find({ username: req.headers.username }).toArray(function (err, result) {
+      dbo.collection("salary").find({ username: req.headers.username }).toArray(function (err, result) {
         if (err) throw err;
         console.log(result);
 
@@ -70,8 +70,8 @@ router.get('/categories', async (req, res) => {
   try {
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
-      var dbo = db.db("salary");
-      dbo.collection("customers").aggregate([{ $match: { username: req.headers.username } }, { $group: { _id: "$categorie", amount: { $push: "$$ROOT" } } }, {
+      var dbo = db.db("invoice");
+      dbo.collection("salary").aggregate([{ $match: { username: req.headers.username } }, { $group: { _id: "$categorie", amount: { $push: "$$ROOT" } } }, {
         $addFields:
         {
           amount: { $sum: "$amount.amount" }
@@ -94,10 +94,10 @@ router.get('/salarybydate', async (req, res) => {
   try {
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
-      var dbo = db.db("salary");
+      var dbo = db.db("invoice");
       var start = new Date("2022-03-30");
       var end = new Date("2021-03-01");
-      dbo.collection("customers").aggregate([{
+      dbo.collection("salary").aggregate([{
         $match: { username: req.headers.username }
       },
       {
@@ -132,10 +132,10 @@ router.get('/test', async (req, res) => {
   try {
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
-      var dbo = db.db("salary");
+      var dbo = db.db("invoice");
       var start = new Date("2022-03-30");
       var end = new Date("2020-02-01");
-      dbo.collection("customers").aggregate([{
+      dbo.collection("salary").aggregate([{
         $match: { // filter to limit to whatever is of importance
           "date": {
             $gte: end,
@@ -169,8 +169,8 @@ router.get('/:title', async (req, res) => {
   try {
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
-      var dbo = db.db("salary");
-      dbo.collection("customers").findOne({ "title": req.params.title }, function (err, result) {
+      var dbo = db.db("invoice");
+      dbo.collection("salary").findOne({ "title": req.params.title }, function (err, result) {
         if (err) throw err;
         console.log(result);
         res.json(result);
@@ -195,8 +195,8 @@ router.post('/', async (req, res) => {
   });
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    var dbo = db.db("salary");
-    dbo.collection("customers").insertOne(salary, function (err, res) {
+    var dbo = db.db("invoice");
+    dbo.collection("salary").insertOne(salary, function (err, res) {
       if (err) throw err;
       console.log("1 document inserted");
       db.close();
@@ -214,7 +214,7 @@ router.put('/:_id', async (req, res) => {
     console.log('neuer titel' + req.body.title);
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
-      var dbo = db.db("salary");
+      var dbo = db.db("invoice");
 
       var myquery = { _id: ObjectId(req.params._id) };
       var rawdate = req.body.date
@@ -222,7 +222,7 @@ router.put('/:_id', async (req, res) => {
       //create a new Date object
       var date = new Date(rawdate)
       var newvalues = { $set: { title: req.body.title, amount: req.body.amount, categorie: req.body.categorie, date: date } };
-      dbo.collection("customers").updateOne(myquery, newvalues, function (err, result) {
+      dbo.collection("salary").updateOne(myquery, newvalues, function (err, result) {
         if (err) throw err;
         console.log("1 document updated");
         res.json(result);
