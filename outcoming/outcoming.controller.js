@@ -186,7 +186,7 @@ router.get('/:title', async (req, res) => {
 router.post('/', async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  const salary = new salary({
+  const salary = new Salary({
     title: req.body.title,
     categorie: req.body.categorie,
     amount: req.body.amount,
