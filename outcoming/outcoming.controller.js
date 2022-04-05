@@ -217,11 +217,12 @@ router.put('/:_id', async (req, res) => {
       var dbo = db.db("invoice");
 
       var myquery = { _id: ObjectId(req.params._id) };
-      var rawdate = req.body.date
-
+      var rawdate = req.body.date;
+      var rawamount = req.body.amount;
       //create a new Date object
-      var date = new Date(rawdate)
-      var newvalues = { $set: { title: req.body.title, amount: req.body.amount, categorie: req.body.categorie, date: date } };
+      var date = new Date(rawdate);
+      var amount = new Number(rawamount);
+      var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: date } };
       dbo.collection("salary").updateOne(myquery, newvalues, function (err, result) {
         if (err) throw err;
         console.log("1 document updated");
