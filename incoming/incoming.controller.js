@@ -224,7 +224,7 @@ router.put('/:_id', async (req, res) => {
 
       //create a new Date object
       var date = new Date(rawdate)
-      var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: uTC2Date } };
+      var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: date } };
       dbo.collection("customers").updateOne(myquery, newvalues, function (err, result) {
         if (err) throw err;
         console.log("1 document updated");
