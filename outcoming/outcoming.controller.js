@@ -221,7 +221,7 @@ router.put('/:_id', async (req, res) => {
       var rawamount = req.body.amount;
       //create a new Date object
       var date = new Date(rawdate);
-      var amount = new Number(rawamount);
+      var amount = parseInt(rawamount);
       var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: date } };
       dbo.collection("salary").updateOne(myquery, newvalues, function (err, result) {
         if (err) throw err;
