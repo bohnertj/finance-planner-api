@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   console.log("Ich war hier");
   try {
-    MongoClient.connect(url, function (err, db) {
+    await MongoClient.connect(url, function (err, db) {
       if (err) throw err;
       var dbo = db.db("invoice");
       console.log("Header: " + req.headers.username);
