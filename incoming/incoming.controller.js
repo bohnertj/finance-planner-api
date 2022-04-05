@@ -186,13 +186,16 @@ router.get('/:title', async (req, res) => {
 router.post('/', async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  var rawdate = req.body.date;
+  //create a new Date object
+  var date = new Date(rawdate);
+  date.setUTCDate();
   const invoice = new Invoice({
-    date:Date,
     title: req.body.title,
     categorie: req.body.categorie,
     amount: req.body.amount,
     username: req.body.username,
-    date: req.body.date
+    date
   });
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
@@ -216,6 +219,7 @@ router.put('/:_id', async (req, res) => {
       var rawamount = req.body.amount;
       //create a new Date object
       var date = new Date(rawdate);
+      date.setUTCDate();
       var amount = parseInt(rawamount);
       var myquery = { _id: ObjectId(req.params._id) };
 
