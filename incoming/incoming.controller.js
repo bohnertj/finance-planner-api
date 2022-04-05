@@ -188,8 +188,7 @@ router.post('/', async (req, res) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   var rawdate = req.body.date;
   //create a new Date object
-  var date = new Date(rawdate);
-  date.setUTCDate();
+  var date = new Date(rawdate).addHours(3);
   const invoice = new Invoice({
     title: req.body.title,
     categorie: req.body.categorie,
