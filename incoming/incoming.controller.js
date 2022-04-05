@@ -218,7 +218,7 @@ router.put('/:_id', async (req, res) => {
       var rawamount = req.body.amount;
       //create a new Date object
       var date = new Date(rawdate);
-      date.setHours(getHours()+2);
+      date.setHours(date.getHours()+2);
       var amount = parseInt(rawamount);
       var myquery = { _id: ObjectId(req.params._id) };
 
