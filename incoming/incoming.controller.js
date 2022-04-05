@@ -188,7 +188,7 @@ router.post('/', async (req, res) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   var rawdate = req.body.date;
   //create a new Date object
-  var date = new Date(rawdate).addHours(3);
+  var date = new Date(rawdate);
   const invoice = new Invoice({
     title: req.body.title,
     categorie: req.body.categorie,
@@ -218,13 +218,13 @@ router.put('/:_id', async (req, res) => {
       var rawamount = req.body.amount;
       //create a new Date object
       var date = new Date(rawdate);
-      date.setUTCDate();
+      var uTC2Date=date.setHours(getHours()+2);
       var amount = parseInt(rawamount);
       var myquery = { _id: ObjectId(req.params._id) };
 
       //create a new Date object
       var date = new Date(rawdate)
-      var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: date } };
+      var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: uTC2Date } };
       dbo.collection("customers").updateOne(myquery, newvalues, function (err, result) {
         if (err) throw err;
         console.log("1 document updated");
