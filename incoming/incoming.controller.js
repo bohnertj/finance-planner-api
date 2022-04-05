@@ -208,23 +208,20 @@ router.post('/', async (req, res) => {
 
 router.put('/:_id', async (req, res) => {
   try {
-    const invoice = new Invoice({
-    date:Date,
-    title: req.body.title,
-    categorie: req.body.categorie,
-    amount: req.body.amount,
-    username: req.body.username,
-    date: req.body.date
-  });
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
       var dbo = db.db("invoice");
-
-      var myquery = { _id: ObjectId(req.params._id) };      var rawdate = req.body.date
+      var myquery = { _id: ObjectId(req.params._id) };
+      var rawdate = req.body.date;
+      var rawamount = req.body.amount;
+      //create a new Date object
+      var date = new Date(rawdate);
+      var amount = parseInt(rawamount);
+      var myquery = { _id: ObjectId(req.params._id) };
 
       //create a new Date object
       var date = new Date(rawdate)
-      var newvalues = { $set: { title: req.body.title, amount: req.body.amount, categorie: req.body.categorie, date: date } };
+      var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: date } };
       dbo.collection("customers").updateOne(myquery, newvalues, function (err, result) {
         if (err) throw err;
         console.log("1 document updated");
