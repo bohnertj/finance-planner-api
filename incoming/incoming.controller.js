@@ -219,15 +219,15 @@ router.put('/:_id', async (req, res) => {
       console.log('RAWDATE: ' +rawdate);
 
       //create a new Date object
-      var date = new Date(rawdate);
-      date.setHours(date.getHours() + 2);
+      var germanDate = new Date(rawdate);
+      germanDate.setHours(germanDate.getHours() + 2);
       console.log('NEWDATE: ' +date);
       var amount = parseInt(rawamount);
       var myquery = { _id: ObjectId(req.params._id) };
 
       //create a new Date object
       var date = new Date(rawdate)
-      var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: date } };
+      var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: germanDate } };
       dbo.collection("customers").updateOne(myquery, newvalues, function (err, result) {
         if (err) throw err;
         console.log("1 document updated");
