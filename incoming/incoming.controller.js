@@ -194,7 +194,7 @@ router.post('/', async (req, res) => {
     categorie: req.body.categorie,
     amount: req.body.amount,
     username: req.body.username,
-    date
+    date: date
   });
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
@@ -218,7 +218,6 @@ router.put('/:_id', async (req, res) => {
       var rawamount = req.body.amount;
       //create a new Date object
       var date = new Date(rawdate);
-      date.setHours(date.getHours()+2);
       var amount = parseInt(rawamount);
       var myquery = { _id: ObjectId(req.params._id) };
 
