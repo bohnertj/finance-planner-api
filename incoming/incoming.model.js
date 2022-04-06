@@ -1,5 +1,7 @@
 const { ObjectId } = require('mongoose');
 const mongoose = require('mongoose');
+const moment = require('moment-timezone');
+const dateGermany = moment.tz(Date.now(), "Europe/Berlin");
 
 
 const IncomingSchema = mongoose.Schema({
@@ -22,6 +24,7 @@ const IncomingSchema = mongoose.Schema({
     },
     date: {
         type: Date,
+        default:dateGermany,
         require: true
     },
     username: {
