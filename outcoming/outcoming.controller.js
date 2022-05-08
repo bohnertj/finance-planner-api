@@ -18,7 +18,7 @@ router.delete('/:_id', async (req, res) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   try {
     console.log('Löschung wird aufgerufen, mit id' + req.params._id)
-    MongoClient.connect(url,function (err, db) {
+    MongoClient.connect(url, function (err, db) {
       if (err) throw err;
       var dbo = db.db("invoice");
       dbo.collection("salary").deleteOne({ _id: ObjectId(req.params._id) }, function (err, result) {
@@ -36,14 +36,10 @@ router.delete('/:_id', async (req, res) => {
 });
 
 
-
-
-
 //ROUTES
 router.get('/', async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  console.log("Ich war hier");
   try {
     await MongoClient.connect(url, function (err, db) {
       if (err) throw err;
@@ -148,8 +144,8 @@ router.get('/test', async (req, res) => {
             "month": { $month: "$date" }, // month
             "year": { $year: "$date" }
           }, // and year
-           amount: { $push: "$$ROOT" }
-         // "count": { $sum: 1 }  // and sum up all documents per group
+          amount: { $push: "$$ROOT" }
+          // "count": { $sum: 1 }  // and sum up all documents per group
         }
       }]).toArray(function (err, result) {
         if (err) throw err;
@@ -186,12 +182,15 @@ router.get('/:title', async (req, res) => {
 router.post('/', async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  var rawdate = req.body.date;
+  //create a new Date object
+  var date = new Date(rawdate);
   const salary = new Salary({
     title: req.body.title,
     categorie: req.body.categorie,
     amount: req.body.amount,
     username: req.body.username,
-    date: req.body.date
+    date: date
   });
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
@@ -210,19 +209,17 @@ router.put('/:_id', async (req, res) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
   try {
-    console.log('Update wird aufgerufen mit id' + req.params._id)
-    console.log('neuer titel' + req.body.title);
-    MongoClient.connect(url, function (err, db) {
+      MongoClient.connect(url, function (err, db) {
       if (err) throw err;
       var dbo = db.db("invoice");
-
       var myquery = { _id: ObjectId(req.params._id) };
       var rawdate = req.body.date;
       var rawamount = req.body.amount;
       //create a new Date object
-      var date = new Date(rawdate);
+      var germanDate = new Date(rawdate);
+      germanDate.setHours(germanDate.getHours() + 2);
       var amount = parseInt(rawamount);
-      var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: date } };
+      var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: germanDate } };
       dbo.collection("salary").updateOne(myquery, newvalues, function (err, result) {
         if (err) throw err;
         console.log("1 document updated");
@@ -236,8 +233,5 @@ router.put('/:_id', async (req, res) => {
     res.json({ message: err })
   }
 });
-
-
-
 
 module.exports = router;
