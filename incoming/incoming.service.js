@@ -9,7 +9,6 @@ module.exports = {
 }
 
 async function _delete(id) {
-	console.log('jetzt bin ich hier zum löschen!')
     await Incoming.findByIdAndRemove(id);
 }
 

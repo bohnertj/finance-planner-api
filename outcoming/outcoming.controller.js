@@ -17,20 +17,18 @@ router.delete('/:_id', async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   try {
-    console.log('Löschung wird aufgerufen, mit id' + req.params._id)
+    console.log('Löschung wird aufgerufen, mit id: ' + req.params._id)
     MongoClient.connect(url, function (err, db) {
       if (err) throw err;
       var dbo = db.db("invoice");
       dbo.collection("salary").deleteOne({ _id: ObjectId(req.params._id) }, function (err, result) {
         if (err) throw err;
-        console.log(result);
         res.json(result);
         db.close();
       });
     });
   }
   catch (err) {
-    console.log('Löschung wird aufgerufen')
     res.json({ message: err })
   }
 });
@@ -44,18 +42,14 @@ router.get('/', async (req, res) => {
     await MongoClient.connect(url, function (err, db) {
       if (err) throw err;
       var dbo = db.db("invoice");
-      console.log("Header: " + req.headers.username);
       dbo.collection("salary").find({ username: req.headers.username }).toArray(function (err, result) {
         if (err) throw err;
-        console.log(result);
-
         res.json(result);
         db.close();
       });
     });
   }
   catch (err) {
-    console.log("error: " + err);
     res.json({ message: err })
   }
 });
@@ -74,14 +68,12 @@ router.get('/categories', async (req, res) => {
         }
       }]).toArray(function (err, result) {
         if (err) throw err;
-        console.log(result);
         res.json(result);
         db.close();
       });
     });
   }
   catch (err) {
-    console.log("error: " + err);
     res.json({ message: err })
   }
 });
@@ -110,14 +102,12 @@ router.get('/salarybydate', async (req, res) => {
         }
       }]).toArray(function (err, result) {
         if (err) throw err;
-        console.log(result);
         res.json(result);
         db.close();
       });
     });
   }
   catch (err) {
-    console.log("error: " + err);
     res.json({ message: err })
   }
 });
@@ -149,14 +139,12 @@ router.get('/test', async (req, res) => {
         }
       }]).toArray(function (err, result) {
         if (err) throw err;
-        console.log(result);
         res.json(result);
         db.close();
       });
     });
   }
   catch (err) {
-    console.log("error: " + err);
     res.json({ message: err })
   }
 });
@@ -168,7 +156,6 @@ router.get('/:title', async (req, res) => {
       var dbo = db.db("invoice");
       dbo.collection("salary").findOne({ "title": req.params.title }, function (err, result) {
         if (err) throw err;
-        console.log(result);
         res.json(result);
         db.close();
       });
@@ -197,7 +184,7 @@ router.post('/', async (req, res) => {
     var dbo = db.db("invoice");
     dbo.collection("salary").insertOne(salary, function (err, res) {
       if (err) throw err;
-      console.log("1 document inserted");
+      console.log("Neuer Eintrag hinzugefügt");
       db.close();
     });
     res.json(salary);
@@ -222,14 +209,13 @@ router.put('/:_id', async (req, res) => {
       var newvalues = { $set: { title: req.body.title, amount: amount, categorie: req.body.categorie, date: germanDate } };
       dbo.collection("salary").updateOne(myquery, newvalues, function (err, result) {
         if (err) throw err;
-        console.log("1 document updated");
+        console.log("Eintrag geupdated");
         res.json(result);
         db.close();
       });
     });
   }
   catch (err) {
-    console.log('Löschung wird aufgerufen')
     res.json({ message: err })
   }
 });
