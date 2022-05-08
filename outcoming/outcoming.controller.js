@@ -131,11 +131,10 @@ router.get('/test', async (req, res) => {
       }, {
         $group: { // group by
           _id: {
-            "month": { $month: "$date" }, // month
+            "month": { $month: "$date" },
             "year": { $year: "$date" }
-          }, // and year
+          },
           amount: { $push: "$$ROOT" }
-          // "count": { $sum: 1 }  // and sum up all documents per group
         }
       }]).toArray(function (err, result) {
         if (err) throw err;
@@ -171,13 +170,14 @@ router.post('/', async (req, res) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   var rawdate = req.body.date;
   //create a new Date object
-  var date = new Date(rawdate);
+  var germanDate = new Date(rawdate);
+  germanDate.setHours(germanDate.getHours() + 2);
   const salary = new Salary({
     title: req.body.title,
     categorie: req.body.categorie,
     amount: req.body.amount,
     username: req.body.username,
-    date: date
+    date: germanDate
   });
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
@@ -196,7 +196,7 @@ router.put('/:_id', async (req, res) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
   try {
-      MongoClient.connect(url, function (err, db) {
+    MongoClient.connect(url, function (err, db) {
       if (err) throw err;
       var dbo = db.db("invoice");
       var myquery = { _id: ObjectId(req.params._id) };

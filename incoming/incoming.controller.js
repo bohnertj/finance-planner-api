@@ -131,11 +131,10 @@ router.get('/test', async (req, res) => {
       }, {
         $group: { // group by
           _id: {
-            "month": { $month: "$date" }, // month
+            "month": { $month: "$date" },
             "year": { $year: "$date" }
-          }, // and year
+          },
           amount: { $push: "$$ROOT" }
-          // "count": { $sum: 1 }  // and sum up all documents per group
         }
       }]).toArray(function (err, result) {
         if (err) throw err;
